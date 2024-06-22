@@ -1,0 +1,104 @@
+:root{
+    --BORDER-COLOR:gray;
+    --BORDER-SIZE:2px;
+
+    --TEXT-SIZE:1.5rem;
+
+    --PADDING:1rem;
+
+    --BG-COLOR: rgb(31 41 55);
+    --TEXT-COLOR: whitesmoke;
+}
+
+*{
+    margin: 0;
+}
+
+
+.reset{
+   all:unset;
+   list-style: none;
+}
+
+.text-size{
+    font-size: var(--TEXT-SIZE);
+}
+
+.navigate{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-color: var(--BORDER-COLOR);
+    border-bottom:var(--BORDER-SIZE) solid;
+    padding: var(--PADDING);
+}
+
+
+
+.navigate-div{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navigate-div-item{
+    padding: var(--PADDING);
+}
+
+.navigate-div-a_sign-up{
+    
+    background-color: rgb(2, 48, 32);
+    color:var(--TEXT-COLOR);
+    border-radius: 1.2rem;
+}
+
+.navigate-div-a_sign-up:hover{
+    background-color: rgb(2, 32, 22);
+}
+
+.navigate-div-a_log-in{
+    background-color: rgb(119, 131, 126);
+    color:var(--TEXT-COLOR);
+    border-radius: 1.2rem;
+}
+
+.navigate-div-a_log-in:hover{
+    background-color: rgb(90, 95, 93);
+}
+
+.footer{
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--BG-COLOR);
+}
+.footer-div_about{
+    flex:2;
+    padding-left: var(--PADDING);
+    padding-bottom: 1rem;
+}
+
+.footer-div-h3{
+    color: var(--TEXT-COLOR);
+    padding-top: var(--PADDING);
+    padding-bottom: 1rem;
+}
+
+.footer-div_links{
+    flex:1;
+    padding-bottom: 1rem;
+}
+
+.footer-div_links-ul{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.footer-div_links-ul li{
+    font-size: 1.2rem;
+    padding-bottom: 10px;
+    color: green;
+}
+
+.footer-div_links-ul li:hover{
+    color: rgb(0, 97, 0);
+}

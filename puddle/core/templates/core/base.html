@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}{% endblock %} | Puddle</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+<body>
+    <nav class="navigate">
+        <a href="{% url 'index' %}" class="navigate-a text-size reset">Назва</a> <!-- Треба замінити на лого-->
+        <div class="navigate-div">
+            <a href="#" class="text-size reset" >Пошук</a>
+
+            <a href="#" class="navigate-div-a_sign-up reset navigate-div-item">Зареєструватися</a>
+            <a href="#" class="navigate-div-a_log-in reset navigate-div-item">Увійти</a>
+        </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+
+    <footer class="footer">
+        <div class="footer-div_about">
+            <h3 class="text-size footer-div-h3">Про нас</h3>
+        </div>
+
+        <div class="footer-div_links">
+            <h3 class="text-size footer-div-h3">Menu</h3>
+
+            <ul class="reset footer-div_links-ul">
+                <li><a href="#" class="reset">Про нас</a></li>
+                <li><a href="{% url 'contact' %}" class="reset">Контакт</a></li>
+                <li><a href="#" class="reset">Політика конфіденційності</a></li>
+                <li><a href="#" class="reset">Правила користування</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>
