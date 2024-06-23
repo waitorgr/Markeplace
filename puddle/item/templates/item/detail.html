@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block title %} {{ item.name }} {% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        
+        <img src="{{ item.image.url }}"> <!--зробити для багатьох картинок-->
+        
+    </div>
+
+    <div>
+        <h1>{{ item.name }}</h1>
+
+        <p><strong>Ціна:</strong> {{ item.price }}</p>
+        <p><strong>Наявність</strong> {{ item.count }}</p>
+        <p><strong>Виробник</strong> {{ item.producer }}</p>
+
+        <p>
+            <strong>Опис:</strong> <br>
+            {{ item.desctiption }}
+        </p>
+    </div>
+</div>
+{% endblock %}
