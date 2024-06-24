@@ -11,12 +11,19 @@
 </head>
 <body>
     <nav class="navigate">
-        <a href="{% url 'index' %}" class="navigate-a text-size reset">Назва</a> <!-- Треба замінити на лого-->
+        <a href="{% url 'core:index' %}" class="navigate-a text-size reset">Назва</a> <!-- Треба замінити на лого-->
         <div class="navigate-div">
             <a href="#" class="text-size reset" >Пошук</a>
 
-            <a href="#" class="navigate-div-a_sign-up reset navigate-div-item">Зареєструватися</a>
-            <a href="#" class="navigate-div-a_log-in reset navigate-div-item">Увійти</a>
+            {% if request.user.is_authenticated %} <!--Хз, що це треба буде потім розібратися-->
+            <a href="#" class="navigate-div-a_sign-up reset navigate-div-item">Inbox</a>
+            <a href="#" class="navigate-div-a_log-in reset navigate-div-item">Dashboard</a>
+            <a href="{% url 'core:logout' %}">Logout</a>
+
+            {% else %}
+            <a href="{% url 'core:signup' %}" class="navigate-div-a_sign-up reset navigate-div-item">Зареєструватися</a>
+            <a href="{% url 'core:login' %}" class="navigate-div-a_log-in reset navigate-div-item">Увійти</a>
+            {% endif %}
         </div>
     </nav>
     {% block content %}
@@ -32,7 +39,7 @@
 
             <ul class="reset footer-div_links-ul">
                 <li><a href="#" class="reset">Про нас</a></li>
-                <li><a href="{% url 'contact' %}" class="reset">Контакт</a></li>
+                <li><a href="{% url 'core:contact' %}" class="reset">Контакт</a></li>
                 <li><a href="#" class="reset">Політика конфіденційності</a></li>
                 <li><a href="#" class="reset">Правила користування</a></li>
             </ul>

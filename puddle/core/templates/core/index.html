@@ -25,4 +25,37 @@
         {% endfor %}
     </div>
  </div>
+<div class="Front-page-div">
+    <h2 class ="Front-page-div_h2">Категорії</h2>
+
+    <div class="Front-page-div-item">
+        {% for category in categories %}
+        <div>
+            <a href="#">
+
+                <div class="down-item">
+                    <h2 class="text-size">{{ category.name }}</h2>
+                    <p class="text-size">{{ category.items.count }} продуктів</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="Front-page-div">
+    <h2 class ="Front-page-div_h2">Виробники</h2>
+
+    <div class="Front-page-div-item">
+        {% for producer in producers %}
+        <div>
+            <a href="#">
+
+                <div class="down-item">
+                    <h2 class="text-size">{{ producer.name }}</h2>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

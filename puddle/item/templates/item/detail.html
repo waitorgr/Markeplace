@@ -16,11 +16,44 @@
         <p><strong>Ціна:</strong> {{ item.price }}</p>
         <p><strong>Наявність</strong> {{ item.count }}</p>
         <p><strong>Виробник</strong> {{ item.producer }}</p>
+        <p><strong>Серія</strong> {{ item.seria }}</p>
+        <p><strong>Теги:</strong></p>
+        {% for teg in item.tegs.all %}
+         <a href="#">{{ teg }}</a><br>
+        {% endfor %}
 
+
+{% if item.desctiption %}
         <p>
             <strong>Опис:</strong> <br>
             {{ item.desctiption }}
         </p>
+{% endif %}
+
+        <a href="#">Contact seller</a> <!--необхідно пізніше змінити-->
+
     </div>
 </div>
+
+<div class="Front-page-div">
+    <h2 class ="Front-page-div_h2">Схожі товари</h2>
+
+    <div class="Front-page-div-item">
+        <!--Йду через предмети-->
+        {% for item in related_items %} 
+            <div>
+                <a href="{% url 'item:detail' item.id %}">
+                    <div>
+                        <img src="{{ item.image.url }}" class="rounded-image">
+                    </div>
+
+                    <div class="down-item">
+                        <h2 class="text-size">{{ item.name }}</h2>
+                        <p class="text-size">Ціна: {{item.price}}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+ </div>
 {% endblock %}

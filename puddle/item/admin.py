@@ -1,10 +1,12 @@
 from django.contrib import admin
 
-from .models import Category,Item,Producer,ItemImage
+from .models import Category,Item,Producer,ItemImage,Seria,Teg
 
 admin.site.register(Category)
 
 admin.site.register(Producer)
+admin.site.register(Seria)
+admin.site.register(Teg)
 
 class ItemImageInline(admin.TabularInline):
     model = ItemImage
