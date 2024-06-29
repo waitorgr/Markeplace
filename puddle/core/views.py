@@ -1,8 +1,9 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import login
+from django.shortcuts import render,redirect, get_object_or_404
 from item.models import Category,Item,Producer
 from .forms import Signup
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import user_passes_test
+from .models import CustomUser
 
 def index(request):
     items=Item.objects.filter(is_sold=False)[0:6] #відображення 6 айтемів
@@ -32,3 +33,21 @@ def signup(request):
 def logout_view(request):
     logout(request)
     return redirect('/')  # Перенаправлення на головну сторінку або іншу, якщо потрібно
+
+def user_is_admin(user):
+    return user.is_superuser
+
+@user_passes_test(user_is_admin)
+def admin_page(request):
+    return render(request, 'core/admin_page.html')
+
+@user_passes_test(user_is_admin)
+def user_list(request):
+    users = CustomUser.objects.all()
+    return render(request, 'core/user_list.html', {'users': users})
+
+@user_passes_test(user_is_admin)
+def delete_user(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    user.delete()
+    return redirect('core:user_list')

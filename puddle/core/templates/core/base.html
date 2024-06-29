@@ -20,6 +20,10 @@
             <a href="#" class="navigate-div-a_log-in reset navigate-div-item">Dashboard</a>
             <a href="{% url 'core:logout' %}">Logout</a>
 
+            {% if user.is_superuser %}
+            <a href="{% url 'core:admin_page' %}">Адміністраторська сторінка</a>
+            {% endif %}
+            
             {% else %}
             <a href="{% url 'core:signup' %}" class="navigate-div-a_sign-up reset navigate-div-item">Зареєструватися</a>
             <a href="{% url 'core:login' %}" class="navigate-div-a_log-in reset navigate-div-item">Увійти</a>
