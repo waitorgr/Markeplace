@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Пошук{% endblock %}
+
+{% block content %}
+    <div>
+        <div>
+            <!-- sidebar -->
+            <form method="get" action="{% url 'item:items' %}">
+                <input name="query" type="text" value="{{ query }}" placeholder="Розетка">
+
+                <button>Пошук</button>
+            </form>
+
+            <hr>
+
+            <p>Категорії</p>
+
+            <ul>
+                {% for category in categories %}
+                <li class="{% if category.id == category_id %} пездани сюди що хочеш (перевірка на вибрану категорію) {% endif %}"> 
+                    <a href="{% url 'item:items' %}?query={{ query }}&category={{ category.id }}">{{category.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <hr>
+
+            <p>Виробник</p>
+
+            <ul>
+                {% for prod in producer %}
+                <li class="{% if prod.id == producer_id %} пездани сюди що хочеш (перевірка на вибраного виробника) {% endif %}"> 
+                    <a href="{% url 'item:items' %}?query={{ query }}&prod={{ prod.id }}">{{prod.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+             
+            <hr>
+
+            <p>Теги</p> <!--Треба якось коректно перейменувати-->
+
+            
+            <ul>
+                {% for t in teg %}
+                <li class="{% if t.id in teg_ids %} active {% endif %}">
+                    <a href="{% url 'item:items' %}?query={{ query }}&teg={{ t.id }}">{{ t.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <hr>
+
+            <p>Серія</p>
+
+            <ul>
+                {% for s in seria %}
+                <li class="{% if s.id == seria_id %} пездани сюди що хочеш (перевірка на вибрану серію) {% endif %}"> 
+                    <a href="{% url 'item:items' %}?query={{ query }}&s={{ s.id }}">{{s.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <hr>
+
+            <p>Очистити фільтри</p>
+
+            <ul>
+                <li><a href="{% url 'item:items' %}">Очистити</a></li>
+            </ul>
+        </div>
+
+
+        <div>
+            <div class="Front-page-div-item">
+                <!--Усі предмети-->
+                {% for item in items %} 
+                    <div>
+                        <a href="{% url 'item:detail' item.id %}">
+                            <div>
+                                <img src="{{ item.image.url }}" class="rounded-image">
+                            </div>
+        
+                            <div class="down-item">
+                                <h2 class="text-size">{{ item.name }}</h2>
+                                <p class="text-size">Ціна: {{item.price}}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
