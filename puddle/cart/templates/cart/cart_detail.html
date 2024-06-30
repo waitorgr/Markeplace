@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h1>Your Cart</h1>
+<div>
+    {% if cart.cartitem_set.all %}
+
+        <ul>
+            {% for item in cart.cartitem_set.all %}
+            <img src="{{ item.product.image.url }}">
+                <li>
+                    Назва: <a href="{% url 'item:detail' item.product.id %}">{{ item.product.name }}</a> <br>
+                    Кількість: {{ item.quantity }} <br>
+                    Ціна: {{ item.product.price }} грн <br>
+                    Сума: {{ item.get_total_item_cost|floatformat:2 }} грн
+                    <form action="{% url 'cart:cart_remove' item.product.id %}" method="post" >
+                        {% csrf_token %}
+                        <button type="submit">Remove</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <p>Загальна вартість: {{ cart.get_total_cost }} грн</p>
+        <!-- <a href="{}">Continue shopping</a> -->
+    {% else %}
+        <p>Your cart is empty</p>
+        <!-- <a href="{}">Continue shopping</a> -->
+    {% endif %}
+</div>
+
+{% endblock %}

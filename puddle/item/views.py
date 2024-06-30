@@ -3,7 +3,8 @@ from .models import Item,ItemImage,Category,Producer,Teg,Seria
 from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 
-from .forms import ItemWithImagesForm, ItemImageForm,ProducerForm,TegForm,SeriaForm
+from .forms import ItemWithImagesForm, ItemImageForm,ProducerForm,TegForm,SeriaForm,CartAddProductForm
+from cart.models import CartItem,Cart
 
 
 def items(request):
@@ -54,13 +55,44 @@ def items(request):
     })
 
 
+def get_cart(request):
+    cart_id = request.session.get('cart_id')
+    if not cart_id:
+        cart = Cart.objects.create()
+        request.session['cart_id'] = cart.id
+    else:
+        cart = Cart.objects.get(id=cart_id)
+    return cart
+
+
 def detail(request, pk):  #зробити для багатьох картинок
     item=get_object_or_404(Item,pk=pk)
     related_items = Item.objects.filter(category=item.category,is_sold=False).exclude(pk=pk)[0:3]
 
+    cart = get_cart(request)
+    if request.method == 'POST':
+        form = CartAddProductForm(request.POST, max_value=item.count)
+        if form.is_valid():
+            cd = form.cleaned_data
+            
+            # Check if requested quantity exceeds available stock
+            if cd['quantity'] > item.count:
+                form.add_error('quantity', 'Неможе біти більше ніж є в наявності')
+            else:
+                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=item)
+                if created or cd['update']:
+                    cart_item.quantity = cd['quantity']
+                else:
+                    cart_item.quantity += cd['quantity']
+                cart_item.save()
+                return redirect('cart:cart_detail')
+    else:
+        form = CartAddProductForm(max_value=item.count)
+
     return render(request,'item/detail.html',{
         'item':item,
         'related_items':related_items,
+        'form': form, 
     })
 
 

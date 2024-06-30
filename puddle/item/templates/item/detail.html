@@ -3,6 +3,7 @@
 {% block title %} {{ item.name }} {% endblock %}
 
 {% block content %}
+
 <div>
     <div>
         
@@ -30,10 +31,25 @@
         </p>
 {% endif %}
 
-        <a href="#">Contact seller</a> <!--необхідно пізніше змінити-->
-
+<form method="post">
+    {% csrf_token %}
+    {{ form.quantity }}
+        
+    <button type="submit">Add to Cart</button>
+    <!-- Display error message if quantity exceeds available stock -->
+    {% if form.errors %}
+    <ul class="errorlist">
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</form>
     </div>
 </div>
+
 
 <div class="Front-page-div">
     <h2 class ="Front-page-div_h2">Схожі товари</h2>
