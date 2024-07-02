@@ -10,8 +10,8 @@
     <div class="Front-page-div-item">
         <!--Йду через предмети-->
         {% for item in items %} 
-            <div>
-                <a href="{% url 'item:detail' item.id %}">
+            <div class="ittem-container">
+                <a href="{% url 'item:detail' item.id %}" class="ittem-a reset">
                     <div>
                         <img src="{{ item.image.url }}" class="rounded-image">
                     </div>
