@@ -7,52 +7,67 @@ from .forms import ItemWithImagesForm, ItemImageForm,ProducerForm,TegForm,SeriaF
 from cart.models import CartItem,Cart
 
 
+from django.db.models import Q
+
+
 def items(request):
-    items= Item.objects.filter(is_sold=False)
+    items = Item.objects.filter(is_sold=False)
 
     category_id = request.GET.get('category', 0)
-    categories= Category.objects.all()
+    category_id = int(category_id) if category_id else 0
 
     producer_id = request.GET.get('producer', 0)
-    producer= Producer.objects.all()
-
-    teg_ids = request.GET.getlist('teg')
-    teg= Teg.objects.all()
+    producer_id = int(producer_id) if producer_id else 0
 
     seria_id = request.GET.get('seria', 0)
-    seria= Seria.objects.all()
+    seria_id = int(seria_id) if seria_id else 0
 
-    query= request.GET.get('query','')
+    teg_ids = request.GET.getlist('teg')
+    tegs = Teg.objects.all()
 
+    query = request.GET.get('query', '')
+
+    # Фільтрація за категорією
     if category_id:
         items = items.filter(category_id=category_id)
 
+    # Фільтрація за виробником
     if producer_id:
         items = items.filter(producer_id=producer_id)
 
+    # Фільтрація за тегами
     if teg_ids:
         if teg_ids and teg_ids[0] != '':
             teg_ids = list(map(int, teg_ids))
             items = items.filter(tegs__id__in=teg_ids).distinct()
 
+    # Фільтрація за серією
     if seria_id:
         items = items.filter(seria_id=seria_id)
 
+    # Фільтрація за запитом
     if query:
-        items = items.filter(Q(name__icontains=query) )
+        items = items.filter(Q(name__icontains=query))
 
-    return render(request,'item/items.html',{
-        'items':items,
-        'query':query,
-        'categories':categories,
-        'producer':producer,
-        'teg':teg,
-        'seria':seria,
-        'category_id':int(category_id),
-        'producer_id':int(producer_id),
+    categories = Category.objects.all()
+    producers = Producer.objects.all()
+    serias = Seria.objects.all()
+
+    return render(request, 'item/items.html', {
+        'items': items,
+        'query': query,
+        'categories': categories,
+        'producers': producers,
+        'tegs': tegs,
+        'serias': serias,
+        'category_id': category_id,
+        'producer_id': producer_id,
         'teg_ids': teg_ids,
-        'seria_id':int(seria_id),
+        'seria_id': seria_id,
     })
+
+ 
+
 
 
 def get_cart(request):

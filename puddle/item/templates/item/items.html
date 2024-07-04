@@ -8,67 +8,68 @@
             <!-- sidebar -->
             <form method="get" action="{% url 'item:items' %}">
                 <input name="query" type="text" value="{{ query }}" placeholder="Розетка">
-
                 <button>Пошук</button>
             </form>
-
+            
             <hr>
-
+            
             <p>Категорії</p>
-
             <ul>
                 {% for category in categories %}
-                <li class="{% if category.id == category_id %} пездани сюди що хочеш (перевірка на вибрану категорію) {% endif %}"> 
-                    <a href="{% url 'item:items' %}?query={{ query }}&category={{ category.id }}">{{category.name}}</a>
+                <li class="{% if category.id == category_id %} selected {% endif %}">
+                    <a href="{% url 'item:items' %}?query={{ query }}{% if producer_id != 0 %}&producer={{ producer_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}{% if seria_id != 0 %}&seria={{ seria_id }}{% endif %}&category={{ category.id }}">{{ category.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
-
-            <hr>
-
-            <p>Виробник</p>
-
-            <ul>
-                {% for prod in producer %}
-                <li class="{% if prod.id == producer_id %} пездани сюди що хочеш (перевірка на вибраного виробника) {% endif %}"> 
-                    <a href="{% url 'item:items' %}?query={{ query }}&prod={{ prod.id }}">{{prod.name}}</a>
-                </li>
-                {% endfor %}
-            </ul>
-             
-            <hr>
-
-            <p>Теги</p> <!--Треба якось коректно перейменувати-->
-
             
+            <hr>
+            
+            <p>Виробник</p>
             <ul>
-                {% for t in teg %}
-                <li class="{% if t.id in teg_ids %} active {% endif %}">
-                    <a href="{% url 'item:items' %}?query={{ query }}&teg={{ t.id }}">{{ t.name }}</a>
+                {% for prod in producers %}
+                <li class="{% if prod.id == producer_id %} selected {% endif %}">
+                    <a href="{% url 'item:items' %}?query={{ query }}{% if category_id != 0 %}&category={{ category_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}{% if seria_id != 0 %}&seria={{ seria_id }}{% endif %}&producer={{ prod.id }}">{{ prod.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
-
+            
             <hr>
-
+            
+            <p>Теги</p> <!-- Використовуємо форму з чекбоксами -->
+            <form method="get" action="{% url 'item:items' %}">
+                <input type="hidden" name="query" value="{{ query }}">
+                <input type="hidden" name="category" value="{{ category_id }}">
+                <input type="hidden" name="producer" value="{{ producer_id }}">
+                <input type="hidden" name="seria" value="{{ seria_id }}">
+                <ul>
+                    {% for t in tegs %}
+                    <li>
+                        <input type="checkbox" name="teg" value="{{ t.id }}" {% if t.id in teg_ids %}checked{% endif %}>
+                        {{ t.name }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <button type="submit">Фільтрувати</button>
+            </form>
+            
+            <hr>
+            
             <p>Серія</p>
-
             <ul>
-                {% for s in seria %}
-                <li class="{% if s.id == seria_id %} пездани сюди що хочеш (перевірка на вибрану серію) {% endif %}"> 
-                    <a href="{% url 'item:items' %}?query={{ query }}&s={{ s.id }}">{{s.name}}</a>
+                {% for s in serias %}
+                <li class="{% if s.id == seria_id %} selected {% endif %}">
+                    <a href="{% url 'item:items' %}?query={{ query }}{% if category_id != 0 %}&category={{ category_id }}{% endif %}{% if producer_id != 0 %}&producer={{ producer_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}&seria={{ s.id }}">{{ s.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
-
+            
             <hr>
-
+            
             <p>Очистити фільтри</p>
-
             <ul>
                 <li><a href="{% url 'item:items' %}">Очистити</a></li>
             </ul>
-        </div>
+            
 
 
         <div>
