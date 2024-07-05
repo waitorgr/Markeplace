@@ -6,41 +6,43 @@
     <div>
         <div>
             <!-- sidebar -->
+
             <form method="get" action="{% url 'item:items' %}">
                 <input name="query" type="text" value="{{ query }}" placeholder="Розетка">
                 <button>Пошук</button>
             </form>
-            
+
             <hr>
-            
+
             <p>Категорії</p>
             <ul>
                 {% for category in categories %}
                 <li class="{% if category.id == category_id %} selected {% endif %}">
-                    <a href="{% url 'item:items' %}?query={{ query }}{% if producer_id != 0 %}&producer={{ producer_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}{% if seria_id != 0 %}&seria={{ seria_id }}{% endif %}&category={{ category.id }}">{{ category.name }}</a>
+                    <a href="{% url 'item:items' %}?query={{ query }}{% if producer_id != 0 %}&producer={{ producer_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}{% if seria_id != 0 %}&seria={{ seria_id }}{% endif %}&category={{ category.id }}&sort_by={{ sort_by }}">{{ category.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
-            
+
             <hr>
-            
+
             <p>Виробник</p>
             <ul>
                 {% for prod in producers %}
                 <li class="{% if prod.id == producer_id %} selected {% endif %}">
-                    <a href="{% url 'item:items' %}?query={{ query }}{% if category_id != 0 %}&category={{ category_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}{% if seria_id != 0 %}&seria={{ seria_id }}{% endif %}&producer={{ prod.id }}">{{ prod.name }}</a>
+                    <a href="{% url 'item:items' %}?query={{ query }}{% if category_id != 0 %}&category={{ category_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}{% if seria_id != 0 %}&seria={{ seria_id }}{% endif %}&producer={{ prod.id }}&sort_by={{ sort_by }}">{{ prod.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
-            
+
             <hr>
-            
-            <p>Теги</p> <!-- Використовуємо форму з чекбоксами -->
+
+            <p>Теги</p>
             <form method="get" action="{% url 'item:items' %}">
                 <input type="hidden" name="query" value="{{ query }}">
                 <input type="hidden" name="category" value="{{ category_id }}">
                 <input type="hidden" name="producer" value="{{ producer_id }}">
                 <input type="hidden" name="seria" value="{{ seria_id }}">
+                <input type="hidden" name="sort_by" value="{{ sort_by }}">
                 <ul>
                     {% for t in tegs %}
                     <li>
@@ -51,28 +53,49 @@
                 </ul>
                 <button type="submit">Фільтрувати</button>
             </form>
-            
+
             <hr>
-            
+
             <p>Серія</p>
             <ul>
                 {% for s in serias %}
                 <li class="{% if s.id == seria_id %} selected {% endif %}">
-                    <a href="{% url 'item:items' %}?query={{ query }}{% if category_id != 0 %}&category={{ category_id }}{% endif %}{% if producer_id != 0 %}&producer={{ producer_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}&seria={{ s.id }}">{{ s.name }}</a>
+                    <a href="{% url 'item:items' %}?query={{ query }}{% if category_id != 0 %}&category={{ category_id }}{% endif %}{% if producer_id != 0 %}&producer={{ producer_id }}{% endif %}{% if teg_ids %}&teg={{ teg_ids|join:"," }}{% endif %}&seria={{ s.id }}&sort_by={{ sort_by }}">{{ s.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
-            
+
             <hr>
-            
+
             <p>Очистити фільтри</p>
             <ul>
                 <li><a href="{% url 'item:items' %}">Очистити</a></li>
             </ul>
+
+        </div>
+
             
 
-
         <div>
+            
+            <form method="get" action="{% url 'item:items' %}">
+                <input type="hidden" name="query" value="{{ query }}">
+                <input type="hidden" name="category" value="{{ category_id }}">
+                <input type="hidden" name="producer" value="{{ producer_id }}">
+                <input type="hidden" name="seria" value="{{ seria_id }}">
+                <ul>
+                    {% for t in teg_ids %}
+                    <input type="hidden" name="teg" value="{{ t }}">
+                    {% endfor %}
+                </ul>
+                <select name="sort_by">
+                    <option value="relevance" {% if sort_by == 'relevance' %}selected{% endif %}>Релевантні товари</option>
+                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Сортувати за зростанням ціни</option>
+                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Сортувати за спаданням ціни</option>
+                </select>
+                <button type="submit">Застосувати</button>
+            </form>
+            
             <div class="Front-page-div-item">
                 <!--Усі предмети-->
                 {% for item in items %} 
@@ -89,7 +112,6 @@
                         </a>
                     </div>
                 {% endfor %}
-            </div>
         </div>
     </div>
 {% endblock %}

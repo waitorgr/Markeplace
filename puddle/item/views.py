@@ -23,9 +23,14 @@ def items(request):
     seria_id = int(seria_id) if seria_id else 0
 
     teg_ids = request.GET.getlist('teg')
+    if teg_ids and isinstance(teg_ids, str):
+        teg_ids = teg_ids.split(',')
+
     tegs = Teg.objects.all()
 
     query = request.GET.get('query', '')
+
+    sort_by = request.GET.get('sort_by', 'relevance')
 
     # Фільтрація за категорією
     if category_id:
@@ -49,6 +54,15 @@ def items(request):
     if query:
         items = items.filter(Q(name__icontains=query))
 
+    # Сортування
+    if sort_by == 'price_asc':
+        items = items.order_by('price')
+    elif sort_by == 'price_desc':
+        items = items.order_by('-price')
+    # Релевантність (за замовчуванням)
+    elif sort_by == 'relevance':
+        pass
+
     categories = Category.objects.all()
     producers = Producer.objects.all()
     serias = Seria.objects.all()
@@ -64,7 +78,13 @@ def items(request):
         'producer_id': producer_id,
         'teg_ids': teg_ids,
         'seria_id': seria_id,
+        'sort_by': sort_by,
     })
+
+
+
+
+
 
  
 
