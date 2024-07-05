@@ -4,6 +4,8 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     patronymic = models.CharField(max_length=30, blank=True, null=True)
+    phone_number=models.CharField(max_length=13, blank=True,null=True)
+    adress=models.TextField(null=True)
     
     groups = models.ManyToManyField(
         Group,

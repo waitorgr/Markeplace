@@ -8,3 +8,9 @@ class CartAddProductForm(forms.Form):
         super().__init__(*args, **kwargs)
         if self.max_value is not None:
             self.fields['quantity'].max_value = self.max_value
+
+class OrderForm(forms.Form):
+    first_name = forms.CharField(max_length=100)
+    last_name = forms.CharField(max_length=100)
+    patronic_name= forms.CharField(max_length=100)
+    address = forms.CharField(widget=forms.Textarea)

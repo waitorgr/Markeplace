@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+
+{% block title%} Аккаунт {% endblock %}
+
+{% block content %}
+
+<h1>User Profile</h1>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>First Name: {{ user.first_name }}</p>
+    <p>Last Name: {{ user.last_name }}</p>
+    <p>Patronymic: {{ user.patronymic }}</p>
+    <p>Phone Number: {{ user.phone_number }}</p>
+    <p>Address: {{ user.address }}</p>
+    
+    <!-- Додайте інші поля якщо потрібно -->
+
+    <!-- Додайте посилання для редагування профілю -->
+    <a href="#">Edit Profile</a>
+    <a href="{% url 'cart:order-list' %}">Замовлення</a>
+
+{% endblock %}

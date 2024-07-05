@@ -1,12 +1,48 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect, get_object_or_404
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Item, Cart, CartItem
-from .forms import CartAddProductForm
+from .models import Item, Cart, CartItem,OrderItem,Order
+from .forms import CartAddProductForm,OrderForm
+
+from django.contrib import messages
+from django.views.generic import ListView,DetailView
 
 def cart_detail(request):
-    cart = get_cart(request)
-    return render(request, 'cart/cart_detail.html', {'cart': cart})
+    cart = get_cart(request)  # Assuming get_cart is defined somewhere else to retrieve the current cart
+    for cart_item in cart.cartitem_set.all():
+            if cart_item.quantity > cart_item.product.count:
+                cart_item.quantity = cart_item.product.count
+                cart_item.save()
+                messages.warning(request, f"Кількість товару '{cart_item.product.name}' була зменшена до наявної кількості.")
+    if request.method == 'POST':
+       
+
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            order = Order.objects.create(
+                first_name=cd['first_name'],
+                last_name=cd['last_name'],
+                patronic_name=cd['patronic_name'],
+                address=cd['address']
+            )
+
+            # Add items from cart to the order
+            for cart_item in cart.cartitem_set.all():
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity
+                )
+
+            # Clear the cart after creating the order and order items
+            cart.cartitem_set.all().delete()
+
+            return redirect('/')  # Redirect to a suitable URL after successful order submission
+    else:
+        form = OrderForm()
+
+    return render(request, 'cart/cart_detail.html', {'cart': cart, 'form': form})
+
 
 def cart_add(request, product_id):
     cart = get_cart(request)
@@ -44,3 +80,12 @@ def cart_remove(request, product_id):
         cart_item.delete()
     return redirect('cart:cart_detail')
 
+class OrderListView(ListView):
+    model = Order
+    template_name = 'cart/order_list.html'  # Шлях до шаблону, який ви створите нижче
+    context_object_name = 'orders'
+
+class OrderDetailView(DetailView):
+    model = Order
+    template_name = 'cart/order_detail.html'  # Шлях до шаблону, який ви створите нижче
+    context_object_name = 'order'

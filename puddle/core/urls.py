@@ -16,4 +16,5 @@ urlpatterns=[
     path('admin-page/', staff_member_required(views.admin_page), name='admin_page'),
     path('users/', views.user_list, name='user_list'),
     path('users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('profile/', views.view_profile, name='view_profile'),
 ]

@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from item.models import Category,Item,Producer
 from .forms import Signup
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test,login_required
 from .models import CustomUser
 
 def index(request):
@@ -51,3 +51,11 @@ def delete_user(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
     user.delete()
     return redirect('core:user_list')
+
+@login_required  # дозволяє перевірити, чи користувач аутентифікований
+def view_profile(request):
+    user = request.user  # отримуємо поточного користувача
+    context = {
+        'user': user
+    }
+    return render(request, 'core/profile.html', context)
