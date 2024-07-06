@@ -31,7 +31,7 @@
     <div class="Front-page-div-item">
         {% for category in categories %}
         <div>
-            <a href="#">
+            <a href="{% url 'item:items' %}?category={{ category.id }}">
 
                 <div class="down-item">
                     <h2 class="text-size">{{ category.name }}</h2>
@@ -48,7 +48,7 @@
     <div class="Front-page-div-item">
         {% for producer in producers %}
         <div>
-            <a href="#">
+            <a href="{% url 'item:items' %}?producer={{ producer.id }}">
 
                 <div class="down-item">
                     <h2 class="text-size">{{ producer.name }}</h2>

@@ -2,10 +2,14 @@
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 
+from cart.models import Cart
+
 class CustomUser(AbstractUser):
     patronymic = models.CharField(max_length=30, blank=True, null=True)
     phone_number=models.CharField(max_length=13, blank=True,null=True)
     adress=models.TextField(null=True)
+
+    cart = models.ForeignKey(Cart, on_delete=models.SET_NULL, null=True, blank=True)
     
     groups = models.ManyToManyField(
         Group,

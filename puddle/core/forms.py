@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
-from .models import CustomUser 
+from .models import CustomUser,Cart
+
 
 class Signup(UserCreationForm):
     username=forms.CharField(required=True, max_length=100, widget=forms.TextInput(attrs={
@@ -40,6 +41,10 @@ class Signup(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.patronymic = self.cleaned_data['patronymic']  # Добавьте это поле, если у вас есть кастомная модель пользователя
         if commit:
+            user.save()
+            # Створення кошика для нового користувача
+            cart = Cart.objects.create()
+            user.cart = cart
             user.save()
         return user
 
