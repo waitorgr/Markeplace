@@ -18,11 +18,18 @@ class CartItem(models.Model):
         return self.product.price * self.quantity
 
 class Order(models.Model):
-    first_name=models.CharField(max_length=100)
-    last_name=models.CharField(max_length=100)
-    patronic_name=models.CharField(max_length=100)
-    address=models.CharField(max_length=100)
-    created_at=models.DateTimeField(auto_created=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    patronic_name = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    phone_number = models.CharField(max_length=14)
+    delivery_service = models.CharField(max_length=20, choices=[
+        ('novaposhta', 'Нова Пошта'),
+        ('ukrposhta', 'Укрпошта'),
+    ])
+    delivery_address = models.TextField()
+    contact_required = models.BooleanField(default=False)
 
     def get_total_cost(self):
         total_cost = sum(item.product.price * item.quantity for item in self.orderitem_set.all())

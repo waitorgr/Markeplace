@@ -6,6 +6,7 @@ from .forms import CartAddProductForm,OrderForm
 from django.contrib import messages
 from django.views.generic import ListView,DetailView
 
+
 def cart_detail(request):
     cart = get_cart(request)
 
@@ -24,7 +25,6 @@ def cart_detail(request):
                 first_name=cd['first_name'],
                 last_name=cd['last_name'],
                 patronic_name=cd['patronic_name'],
-                address=cd['address'],
                 delivery_service=cd['delivery_service'],
                 delivery_address=cd['delivery_address'],
                 contact_required=cd['requires_contact'],
@@ -42,6 +42,11 @@ def cart_detail(request):
             # Очищення кошика після створення замовлення та елементів замовлення
             cart.cartitem_set.all().delete()
 
+
+            # Додати нове замовлення до списку замовлень користувача
+            if request.user.is_authenticated:
+                request.user.orders.add(order)
+            
             return redirect('/')  # Перенаправлення на підходящий URL після успішного оформлення замовлення
     else:
         form = OrderForm()
@@ -102,6 +107,12 @@ class OrderListView(ListView):
     model = Order
     template_name = 'cart/order_list.html'  # Шлях до шаблону, який ви створите нижче
     context_object_name = 'orders'
+
+    def get_queryset(self):
+        # Повертає замовлення користувача, якщо він авторизований
+        if self.request.user.is_authenticated:
+            return Order.objects.filter(user_orders=self.request.user)
+        return Order.objects.none()  # Повертає пустий queryset, якщо користувач не авторизований
 
 class OrderDetailView(DetailView):
     model = Order

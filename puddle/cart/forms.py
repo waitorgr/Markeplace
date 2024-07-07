@@ -12,5 +12,11 @@ class CartAddProductForm(forms.Form):
 class OrderForm(forms.Form):
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100)
-    patronic_name= forms.CharField(max_length=100)
-    address = forms.CharField(widget=forms.Textarea)
+    patronic_name = forms.CharField(max_length=100)
+    phone_number = forms.CharField(max_length=14)
+    delivery_service = forms.ChoiceField(choices=[
+        ('novaposhta', 'Нова Пошта'),
+        ('ukrposhta', 'Укрпошта'),
+    ], widget=forms.RadioSelect)
+    delivery_address = forms.CharField(widget=forms.Textarea)
+    requires_contact = forms.BooleanField(required=False)

@@ -3,9 +3,9 @@ from .models import Order, OrderItem
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'patronic_name', 'address', 'get_total_cost', 'created_at_display']
+    list_display = ['id', 'first_name', 'last_name', 'patronic_name', 'get_total_cost', 'created_at_display']
     list_filter = ['created_at']  # 'created_at' should be a DateField or DateTimeField in your Order model
-    search_fields = ['first_name', 'last_name', 'address']
+    search_fields = ['first_name', 'last_name']
 
     def get_total_cost(self, obj):
         return obj.get_total_cost()
