@@ -7,15 +7,16 @@ from django.contrib import messages
 from django.views.generic import ListView,DetailView
 
 def cart_detail(request):
-    cart = get_cart(request)  # Assuming get_cart is defined somewhere else to retrieve the current cart
-    for cart_item in cart.cartitem_set.all():
-            if cart_item.quantity > cart_item.product.count:
-                cart_item.quantity = cart_item.product.count
-                cart_item.save()
-                messages.warning(request, f"Кількість товару '{cart_item.product.name}' була зменшена до наявної кількості.")
-    if request.method == 'POST':
-       
+    cart = get_cart(request)
 
+    # Перевірка кількості товарів у кошику перед відображенням
+    for cart_item in cart.cartitem_set.all():
+        if cart_item.quantity > cart_item.product.count:
+            cart_item.quantity = cart_item.product.count
+            cart_item.save()
+            messages.warning(request, f"Кількість товару '{cart_item.product.name}' була зменшена до наявної кількості.")
+
+    if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
@@ -23,10 +24,14 @@ def cart_detail(request):
                 first_name=cd['first_name'],
                 last_name=cd['last_name'],
                 patronic_name=cd['patronic_name'],
-                address=cd['address']
+                address=cd['address'],
+                delivery_service=cd['delivery_service'],
+                delivery_address=cd['delivery_address'],
+                contact_required=cd['requires_contact'],
+                phone_number=cd['phone_number']
             )
 
-            # Add items from cart to the order
+            # Додавання елементів з кошика до замовлення
             for cart_item in cart.cartitem_set.all():
                 OrderItem.objects.create(
                     order=order,
@@ -34,10 +39,10 @@ def cart_detail(request):
                     quantity=cart_item.quantity
                 )
 
-            # Clear the cart after creating the order and order items
+            # Очищення кошика після створення замовлення та елементів замовлення
             cart.cartitem_set.all().delete()
 
-            return redirect('/')  # Redirect to a suitable URL after successful order submission
+            return redirect('/')  # Перенаправлення на підходящий URL після успішного оформлення замовлення
     else:
         form = OrderForm()
 
@@ -47,6 +52,7 @@ def cart_detail(request):
 def cart_add(request, product_id):
     cart = get_cart(request)
     product = get_object_or_404(Item, id=product_id)
+
     if request.method == 'POST':
         form = CartAddProductForm(request.POST, max_value=product.count)
         if form.is_valid():
@@ -57,20 +63,32 @@ def cart_add(request, product_id):
             else:
                 cart_item.quantity += cd['quantity']
             cart_item.save()
-            return redirect('cart/cart_detail.html')
+            return redirect('cart:cart_detail')
     else:
         form = CartAddProductForm(max_value=product.count)
+
     return render(request, 'cart/cart_detail.html', {'form': form, 'product': product})
 
 
 def get_cart(request):
     cart_id = request.session.get('cart_id')
-    if not cart_id:
-        cart = Cart.objects.create()
+    
+    # Перевірка, чи користувач авторизований
+    if request.user.is_authenticated:
+        # Отримання кошика користувача, якщо він існує
+        cart = request.user.cart
+        # Оновлення сесії з ідентифікатором кошика користувача
         request.session['cart_id'] = cart.id
     else:
-        cart = Cart.objects.get(id=cart_id)
+        # Створення нового кошика, якщо ідентифікатор не існує в сесії
+        if not cart_id:
+            cart = Cart.objects.create()
+            request.session['cart_id'] = cart.id
+        else:
+            cart = Cart.objects.get(id=cart_id)
+
     return cart
+
 
 def cart_remove(request, product_id):
     cart = get_cart(request)
