@@ -1,38 +1,52 @@
-Django MarketPlace
+
+
+---
+
+# Django MarketPlace
+
 Django MarketPlace is a basic e-commerce platform built with Django, providing essential store functionalities for creating, managing, and viewing orders.
 
-Features
-Add items to cart
-Remove items from cart
-Place an order
-View order details
-Technologies
-Django
-Python
-Installation
-Clone the repository:
+## Features
 
-bash
-Копіювати код
-git clone <repository-url>
-Navigate to the project directory:
+- Add items to cart
+- Remove items from cart
+- Place an order
+- View order details
 
-bash
-Копіювати код
-cd Django-MarketPlace
-Install dependencies: Make sure to have pip installed, then run:
+## Technologies
 
-bash
-Копіювати код
-pip install -r requirements.txt
-Navigate to the project folder:
+- Django
+- Python
 
-bash
-Копіювати код
-cd puddle
-Run the server:
+## Installation
 
-bash
-Копіювати код
-python manage.py runserver
-Access the application: Open your browser and go to http://127.0.0.1:8000 to view the project.
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   ```
+
+2. **Navigate to the project directory:**
+   ```bash
+   cd Django-MarketPlace
+   ```
+
+3. **Install dependencies:**
+   Make sure to have `pip` installed, then run:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Navigate to the project folder:**
+   ```bash
+   cd puddle
+   ```
+
+5. **Run the server:**
+   ```bash
+   python manage.py runserver
+   ```
+
+6. **Access the application:**
+   Open your browser and go to `http://127.0.0.1:8000` to view the project.
+
+---
